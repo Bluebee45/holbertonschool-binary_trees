@@ -1,82 +1,46 @@
 #include "binary_trees.h"
 
 /**
- * binary_tree_is_leaf - check the leaf
+ * binary_tree_is_perfect - Checks if a binary tree is perfect.
+ * @tree: A pointer to the root node of the tree to check.
  *
- * @node: passed parent
- * Return: 1 if is leafe 0 otherwise
+ * Return: 1 if the tree is perfect, 0 otherwise or if tree is NULL.
  */
-
-int binary_tree_is_leaf(const binary_tree_t *node)
-{
-	if (!node)
-	{
-		return (0);
-	}
-
-	if (node != NULL && !node->left && !node->right)
-	{
-		return (1);
-	}
-
-	return (0);
-}
-
-/**
- * binary_tree_height - measures the height of a binary tree
- * @tree: pointer to the root node
- *
- * Return: height of the binary tree
- */
-size_t binary_tree_height(const binary_tree_t *tree)
-{
-	size_t left = 0;
-	size_t right = 0;
-
-	if (tree == NULL || binary_tree_is_leaf(tree) == 1)
-	{
-		return (0);
-	}
-	left = binary_tree_height(tree->left);
-	right = binary_tree_height(tree->right);
-	if (left < right)
-	{
-		return (1 + right);
-	}
-	return (1 + left);
-}
-
-/**
- * binary_tree_is_perfect - checks if is perfect
- *
- * @tree: pointer to root
- * Return: int
- */
-
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	binary_tree_t *left, *right;
+	size_t l_ht, r_h;
 
 	if (tree == NULL)
 		return (0);
 
-	left = tree->left;
-	right = tree->right;
+	l_h = binary_tree_height(tree->left);
+	r_h = binary_tree_height(tree->right);
 
-	if (binary_tree_is_leaf(tree))
-	{
-		return (1);
-	}
-	if ((left == NULL) || (right == NULL))
-	{
+	if (l_h != r_h)
 		return (0);
-	}
-	if (binary_tree_height(left) == binary_tree_height(right))
-	{
-		if (binary_tree_is_perfect(left) && binary_tree_is_perfect(right))
-		{
-			return (1);
-		}
-	}
-	return (0);
+
+	if (tree->left == NULL && tree->right == NULL)
+		return (1);
+
+	return (binary_tree_is_perfect(tree->left) &&
+	binary_tree_is_perfect(tree->right));
+}
+
+/**
+ * binary_tree_height - Measures the height of a binary tree.
+ * @tree: A pointer to the root node of the tree to measure the height.
+ *
+ * Return: The height of the tree, or 0 if tree is NULL.
+ */
+size_t binary_tree_height(const binary_tree_t *tree)
+{
+	size_t l_h, r_h;
+
+	if (tree == NULL)
+		return (0);
+
+	l_h = binary_tree_height(tree->left);
+	r_h = binary_tree_height(tree->right);
+
+	return (1 + (l_h > r_h ? l_h : r_h));
 }
